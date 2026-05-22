@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeAir HVAC — Elite Climate Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,600&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --ink:#08090d;
+  --ink2:#0f1118;
+  --ink3:#161b26;
+  --gold:#c8a45a;
+  --gold2:#e2c27a;
+  --gold3:#f0d99a;
+  --goldFade:rgba(200,164,90,0.12);
+  --goldBorder:rgba(200,164,90,0.25);
+  --goldBorder2:rgba(200,164,90,0.5);
+  --white:#fff;
+  --off:#f5f0e8;
+  --muted:rgba(255,255,255,0.42);
+  --muted2:rgba(255,255,255,0.65);
+  --line:rgba(255,255,255,0.07);
+}
+body{background:var(--ink);color:var(--off);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.65}
+
+/* CURSOR */
+.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--goldBorder2);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .12s ease-out,width .25s,height .25s,opacity .25s}
+@media(hover:none){.cursor,.cursor-ring{display:none}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:80px;transition:background .5s,height .4s}
+nav.scrolled{background:rgba(8,9,13,0.96);backdrop-filter:blur(20px);height:68px;border-bottom:1px solid var(--line)}
+.logo{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;letter-spacing:.05em;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block}
+.nav-center{display:flex;gap:2.8rem;list-style:none}
+.nav-center a{color:var(--muted);font-size:.8rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;transition:color .2s;position:relative}
+.nav-center a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+.nav-center a:hover{color:var(--white)}
+.nav-center a:hover::after{width:100%}
+.nav-phone{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:600;color:var(--gold);text-decoration:none;letter-spacing:.02em;transition:color .2s}
+.nav-phone:hover{color:var(--gold2)}
+.burger{display:none;flex-direction:column;gap:6px;cursor:pointer;background:none;border:none;padding:6px}
+.burger span{display:block;width:26px;height:1.5px;background:var(--white);transition:.3s}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;height:100vh;min-height:700px;display:grid;grid-template-rows:1fr auto;overflow:hidden}
+.hero-media{position:absolute;inset:0}
+.hero-media img{width:100%;height:100%;object-fit:cover;object-position:center 35%;filter:brightness(.55) saturate(1.15)}
+.hero-media::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(8,9,13,.7) 0%,rgba(8,9,13,.2) 45%,rgba(8,9,13,.85) 100%)}
+/* diagonal gold accent */
+.hero-accent{position:absolute;bottom:0;right:0;width:55%;height:60%;background:linear-gradient(135deg,transparent 0%,rgba(200,164,90,.04) 100%);z-index:1;pointer-events:none}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;padding:0 5vw 6vh;max-width:1400px;margin:0 auto;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:12px;margin-bottom:2rem}
+.hero-eyebrow-line{width:40px;height:1px;background:var(--gold)}
+.hero-eyebrow span{font-size:.72rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(3.2rem,7.5vw,7rem);font-weight:900;line-height:1.02;letter-spacing:-.02em;color:var(--white);margin-bottom:1.8rem}
+.hero-h1 em{font-style:italic;color:var(--gold2);display:block}
+.hero-sub{font-size:clamp(.95rem,1.2vw,1.12rem);font-weight:300;color:var(--muted2);max-width:480px;line-height:1.8;margin-bottom:3rem}
+.hero-actions{display:flex;align-items:center;gap:1.8rem;flex-wrap:wrap}
+.btn-gold{display:inline-flex;align-items:center;gap:10px;background:var(--gold);color:var(--ink);font-family:'Jost',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:1.1rem 2.6rem;text-decoration:none;transition:background .25s,transform .2s;position:relative;overflow:hidden}
+.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transform:translateX(-100%);transition:transform .5s}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-gold:hover::before{transform:translateX(100%)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--white);font-family:'Jost',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:1.1rem 2rem;border:1px solid rgba(255,255,255,.22);text-decoration:none;transition:border-color .25s,color .25s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+/* hero bottom stats bar */
+.hero-stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.hstat{padding:1.6rem 2.5rem;border-right:1px solid var(--line);background:rgba(8,9,13,.75);backdrop-filter:blur(12px)}
+.hstat:last-child{border-right:none}
+.hstat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--white);line-height:1;letter-spacing:-.02em}
+.hstat-num span{color:var(--gold);font-size:1.4rem}
+.hstat-label{font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+/* ═══ MARQUEE ═══ */
+.marquee-wrap{overflow:hidden;background:var(--gold);padding:.85rem 0}
+.marquee-track{display:flex;gap:3rem;white-space:nowrap;animation:marquee 25s linear infinite}
+.marquee-track span{font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);opacity:.85;display:flex;align-items:center;gap:1.5rem}
+.marquee-track span::after{content:'✦';opacity:.4}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ INTRO SPLIT ═══ */
+.intro{display:grid;grid-template-columns:1fr 1fr;min-height:80vh}
+.intro-visual{position:relative;overflow:hidden}
+.intro-visual img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform 8s ease}
+.intro-visual:hover img{transform:scale(1.04)}
+.intro-visual-overlay{position:absolute;inset:0;background:linear-gradient(to right,transparent 60%,var(--ink) 100%)}
+.intro-text{padding:8rem 6vw 8rem 5rem;display:flex;flex-direction:column;justify-content:center;background:var(--ink)}
+.section-label{font-size:.68rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:1.8rem}
+.section-label::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
+.display-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.6rem);font-weight:700;line-height:1.1;letter-spacing:-.02em;color:var(--white);margin-bottom:1.8rem}
+.display-title em{font-style:italic;color:var(--gold2)}
+.body-text{font-size:1rem;font-weight:300;color:var(--muted2);line-height:1.9;margin-bottom:2.5rem;max-width:460px}
+.gold-rule{width:60px;height:2px;background:linear-gradient(to right,var(--gold),transparent);margin-bottom:2.5rem}
+.check-list{list-style:none;display:flex;flex-direction:column;gap:1rem}
+.check-list li{display:flex;align-items:flex-start;gap:12px;font-size:.92rem;font-weight:400;color:var(--muted2)}
+.check-list li::before{content:'';display:block;width:18px;height:18px;border:1px solid var(--gold);flex-shrink:0;margin-top:2px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23c8a45a' d='M13.5 3.5L6 11 2.5 7.5'/%3E%3C/svg%3E") center/10px no-repeat}
+
+/* ═══ SERVICES ═══ */
+.services{padding:9rem 5vw;background:var(--ink2);position:relative;overflow:hidden}
+.services::before{content:'';position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(200,164,90,.05) 0%,transparent 70%);pointer-events:none}
+.services-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5rem;gap:2rem;flex-wrap:wrap}
+.services-header .body-text{margin-bottom:0;max-width:380px}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.svc-card{background:var(--ink2);padding:3rem 2.5rem;position:relative;overflow:hidden;cursor:default;transition:background .35s}
+.svc-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--gold),var(--gold2));transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.4,0,.2,1)}
+.svc-card:hover{background:var(--ink3)}
+.svc-card:hover::before{transform:scaleX(1)}
+.svc-num{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:400;color:var(--gold);opacity:.6;letter-spacing:.1em;margin-bottom:1.4rem;display:block}
+.svc-icon{font-size:2.2rem;margin-bottom:1.4rem;display:block;line-height:1}
+.svc-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:600;color:var(--white);margin-bottom:.9rem;line-height:1.3}
+.svc-desc{font-size:.88rem;font-weight:300;color:var(--muted);line-height:1.75}
+.svc-arrow{position:absolute;bottom:2.5rem;right:2.5rem;width:38px;height:38px;border:1px solid var(--goldBorder);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.9rem;opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s}
+.svc-card:hover .svc-arrow{opacity:1;transform:none}
+
+/* ═══ PAIN SECTION ═══ */
+.pain{padding:9rem 5vw;background:var(--ink);position:relative}
+.pain::after{content:'"';position:absolute;top:4rem;right:4rem;font-family:'Playfair Display',serif;font-size:22rem;font-weight:900;color:var(--gold);opacity:.025;line-height:1;pointer-events:none;user-select:none}
+.pain-inner{display:grid;grid-template-columns:1fr 1.6fr;gap:8rem;align-items:start}
+.pain-sticky{position:sticky;top:9rem}
+.pain-cards{display:flex;flex-direction:column;gap:1px;background:var(--line)}
+.pain-card{background:var(--ink);padding:2.2rem 2.4rem;border-left:2px solid transparent;transition:border-color .3s,background .3s,padding-left .3s}
+.pain-card:hover{border-left-color:var(--gold);background:var(--ink3);padding-left:2.8rem}
+.pain-q{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;font-style:italic;color:var(--white);margin-bottom:.75rem;line-height:1.45}
+.pain-a{font-size:.88rem;font-weight:300;color:var(--muted);line-height:1.75}
+
+/* ═══ WHY / CREDENTIALS ═══ */
+.credentials{display:grid;grid-template-columns:1fr 1fr;min-height:75vh;background:var(--ink2)}
+.cred-visual{position:relative;overflow:hidden}
+.cred-visual img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block;filter:brightness(.6) saturate(1.1)}
+.cred-visual-overlay{position:absolute;inset:0;background:linear-gradient(to left,transparent 55%,var(--ink2) 100%)}
+.cred-float{position:absolute;bottom:3rem;left:3rem;right:3rem;background:rgba(8,9,13,.88);backdrop-filter:blur(16px);border:1px solid var(--goldBorder);padding:2rem 2.2rem}
+.cred-float-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:.5rem}
+.cred-float-sub{font-size:.82rem;color:var(--muted);font-weight:300}
+.cred-badges{display:flex;gap:.6rem;margin-top:1.2rem;flex-wrap:wrap}
+.badge{font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);border:1px solid var(--goldBorder);padding:.35rem .9rem}
+.cred-text{padding:7rem 5vw 7rem 5rem;display:flex;flex-direction:column;justify-content:center}
+.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);margin-top:3.5rem}
+.cred-item{background:var(--ink2);padding:2rem 1.8rem;transition:background .3s}
+.cred-item:hover{background:var(--ink3)}
+.cred-item-icon{font-size:1.6rem;margin-bottom:1rem;display:block}
+.cred-item h4{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:var(--white);margin-bottom:.45rem}
+.cred-item p{font-size:.82rem;font-weight:300;color:var(--muted);line-height:1.7}
+
+/* ═══ PROCESS ═══ */
+.process{padding:9rem 5vw;background:var(--ink);position:relative;overflow:hidden}
+.process-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(200,164,90,.04) 0%,transparent 65%);pointer-events:none}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:5rem;position:relative}
+.process-steps::before{content:'';position:absolute;top:36px;left:calc(12.5% + 18px);right:calc(12.5% + 18px);height:1px;background:linear-gradient(to right,var(--gold),rgba(200,164,90,.3),var(--gold));z-index:0}
+.proc-step{padding:0 2.5rem;text-align:center;position:relative;z-index:1}
+.proc-num{width:72px;height:72px;border:1px solid var(--goldBorder);background:var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);position:relative;transition:background .3s,border-color .3s}
+.proc-step:hover .proc-num{background:var(--goldFade);border-color:var(--gold)}
+.proc-step h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:var(--white);margin-bottom:.7rem}
+.proc-step p{font-size:.83rem;font-weight:300;color:var(--muted);line-height:1.7}
+
+/* ═══ TESTIMONIALS ═══ */
+.testimonials{padding:9rem 5vw;background:var(--ink2)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:5rem}
+.testi{background:var(--ink);border:1px solid var(--line);padding:2.8rem;display:flex;flex-direction:column;gap:1.8rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+.testi:hover{border-color:var(--goldBorder);transform:translateY(-4px)}
+.testi-bg-quote{position:absolute;top:-2rem;right:1.5rem;font-family:'Playfair Display',serif;font-size:10rem;font-weight:900;color:var(--gold);opacity:.04;line-height:1;pointer-events:none}
+.testi-stars{display:flex;gap:3px}
+.testi-star{width:13px;height:13px;background:var(--gold);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.testi-quote{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,.82);line-height:1.8;font-weight:400}
+.testi-author{display:flex;align-items:center;gap:1rem;margin-top:auto}
+.testi-avatar{width:46px;height:46px;border-radius:50%;border:1px solid var(--goldBorder);background:var(--ink3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold);flex-shrink:0}
+.testi-name{font-size:.9rem;font-weight:600;color:var(--white)}
+.testi-loc{font-size:.74rem;font-weight:300;color:var(--muted);margin-top:.1rem}
+
+/* ═══ EMERGENCY STRIP ═══ */
+.emergency{position:relative;overflow:hidden;min-height:340px;display:flex;align-items:center;justify-content:center;text-align:center}
+.emergency img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 60%;filter:brightness(.3) saturate(.9)}
+.emergency-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,9,13,.5),rgba(8,9,13,.85))}
+.emergency-content{position:relative;z-index:2;padding:5rem 5vw}
+.emergency-eyebrow{font-size:.7rem;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem}
+.emergency-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3.2rem);font-weight:700;color:var(--white);line-height:1.15;margin-bottom:1rem}
+.emergency-title em{font-style:italic;color:var(--gold2)}
+.emergency-sub{font-size:.9rem;color:var(--muted);font-weight:300;margin-bottom:2.5rem}
+.emergency-phone{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;color:var(--gold2);text-decoration:none;letter-spacing:-.01em;display:block;line-height:1;margin-bottom:1rem;transition:color .2s}
+.emergency-phone:hover{color:var(--white)}
+.emergency-note{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+/* ═══ FAQ ═══ */
+.faq{padding:9rem 5vw;background:var(--ink)}
+.faq-inner{display:grid;grid-template-columns:1fr 1.8fr;gap:8rem;align-items:start;margin-top:4rem}
+.faq-sticky{position:sticky;top:9rem}
+.faq-list{display:flex;flex-direction:column}
+.faq-item{border-bottom:1px solid var(--line);overflow:hidden}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.7rem 0;cursor:pointer;user-select:none}
+.faq-q-text{font-family:'Playfair Display',serif;font-size:1rem;font-weight:500;color:var(--white);line-height:1.4}
+.faq-toggle{width:28px;height:28px;border:1px solid var(--goldBorder);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.1rem;transition:transform .3s,background .2s}
+.faq-item.open .faq-toggle{transform:rotate(45deg);background:var(--goldFade)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:1.5rem}
+.faq-a p{font-size:.88rem;font-weight:300;color:var(--muted);line-height:1.8}
+
+/* ═══ FINAL CTA ═══ */
+.final-cta{position:relative;overflow:hidden;padding:10rem 5vw;text-align:center}
+.final-cta img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:brightness(.25) saturate(1.2)}
+.final-cta-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(200,164,90,.08) 0%,rgba(8,9,13,.95) 70%)}
+.final-cta-content{position:relative;z-index:2;max-width:800px;margin:0 auto}
+.final-cta-content .display-title{font-size:clamp(2.2rem,5vw,4.2rem);margin-bottom:1rem}
+.final-cta-sub{font-size:1rem;color:var(--muted);font-weight:300;margin-bottom:3rem;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.8}
+.final-phone{font-family:'Playfair Display',serif;font-size:clamp(3rem,7vw,5.5rem);font-weight:900;color:var(--gold2);text-decoration:none;display:block;line-height:1;margin-bottom:.8rem;letter-spacing:-.02em;transition:color .25s}
+.final-phone:hover{color:var(--white)}
+.final-phone-label{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:3rem}
+.final-features{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.final-feat{font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+.final-feat::before{content:'—';color:var(--gold);font-family:'Playfair Display',serif}
+
+/* ═══ FOOTER ═══ */
+footer{background:#050609;border-top:1px solid var(--line);padding:5rem 5vw 2.5rem}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;margin-bottom:4rem}
+.f-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.f-logo-dot{width:5px;height:5px;background:var(--gold);border-radius:50%}
+.f-desc{font-size:.85rem;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:1.5rem}
+.f-badges{display:flex;gap:.5rem;flex-wrap:wrap}
+.f-badge{font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--goldBorder);padding:.28rem .7rem}
+.f-head{font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.f-links{list-style:none;display:flex;flex-direction:column;gap:.65rem}
+.f-links a{font-size:.85rem;font-weight:300;color:var(--muted);text-decoration:none;transition:color .2s}
+.f-links a:hover{color:var(--gold2)}
+.footer-bottom{border-top:1px solid var(--line);padding-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.f-copy{font-size:.75rem;color:var(--muted);font-weight:300}
+.f-legal{display:flex;gap:2rem}
+.f-legal a{font-size:.75rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.f-legal a:hover{color:var(--gold)}
+
+/* PHONE FLOAT */
+.phone-float{position:fixed;bottom:2rem;right:2rem;z-index:400;width:56px;height:56px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.35rem;text-decoration:none;box-shadow:0 0 0 0 rgba(200,164,90,.4);animation:pulsefloat 2.5s infinite}
+.phone-float:hover{background:var(--gold2);transform:scale(1.08)}
+@keyframes pulsefloat{0%,100%{box-shadow:0 0 0 0 rgba(200,164,90,.45)}50%{box-shadow:0 0 0 14px rgba(200,164,90,0)}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s ease,transform .9s ease}
+.reveal.up{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .9s ease,transform .9s ease}
+.reveal-left.up{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .9s ease,transform .9s ease}
+.reveal-right.up{opacity:1;transform:none}
+[data-delay="1"]{transition-delay:.1s}
+[data-delay="2"]{transition-delay:.2s}
+[data-delay="3"]{transition-delay:.3s}
+[data-delay="4"]{transition-delay:.4s}
+[data-delay="5"]{transition-delay:.5s}
+[data-delay="6"]{transition-delay:.6s}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){
+  .intro{grid-template-columns:1fr}
+  .intro-visual{height:55vw;min-height:300px}
+  .intro-visual-overlay{background:linear-gradient(to bottom,transparent 60%,var(--ink) 100%)}
+  .intro-text{padding:5rem 5vw}
+  .credentials{grid-template-columns:1fr}
+  .cred-visual{height:60vw;min-height:320px}
+  .cred-visual-overlay{background:linear-gradient(to bottom,transparent 60%,var(--ink2) 100%)}
+  .cred-text{padding:5rem 5vw}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:900px){
+  .nav-center,.nav-phone{display:none}
+  .burger{display:flex}
+  nav.mobile-open .nav-center{display:flex;flex-direction:column;gap:0;position:fixed;inset:0;background:rgba(8,9,13,.98);backdrop-filter:blur(20px);z-index:600;align-items:center;justify-content:center}
+  nav.mobile-open .nav-center a{font-size:1.6rem;padding:1.2rem;letter-spacing:.05em}
+  .hero-h1{font-size:clamp(2.8rem,8vw,5rem)}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .hstat{border-right:none;border-bottom:1px solid var(--line)}
+  .hstat:nth-child(2n){border-right:none}
+  .services-grid{grid-template-columns:1fr}
+  .pain-inner{grid-template-columns:1fr;gap:3rem}
+  .pain-sticky{position:static}
+  .process-steps{grid-template-columns:1fr 1fr;gap:3rem}
+  .process-steps::before{display:none}
+  .testi-grid{grid-template-columns:1fr}
+  .faq-inner{grid-template-columns:1fr;gap:3rem}
+  .faq-sticky{position:static}
+}
+@media(max-width:600px){
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .services-grid{grid-template-columns:1fr}
+  .cred-grid{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .final-features{flex-direction:column;align-items:center;gap:1rem}
+  section,.pain,.services,.credentials .cred-text,.faq,.process,.testimonials{padding-top:5.5rem;padding-bottom:5.5rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#" class="logo"><span class="logo-dot"></span>PrimeAir HVAC</a>
+  <ul class="nav-center">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="tel:+18005550100" class="nav-phone">(800) 555-0100</a>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-media">
+    <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=2000&q=90&auto=format&fit=crop" alt="Luxury home at golden hour sunset" loading="eager">
+  </div>
+  <div class="hero-accent"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow reveal">
+      <div class="hero-eyebrow-line"></div>
+      <span>Licensed · NATE Certified · EPA 608</span>
+    </div>
+    <h1 class="hero-h1 reveal" data-delay="1">
+      Elite Climate<br>
+      <em>Engineering.</em>
+    </h1>
+    <p class="hero-sub reveal" data-delay="2">We don't just install HVAC systems. We engineer the climate inside your home — with precision, expertise, and a level of craft your family deserves.</p>
+    <div class="hero-actions reveal" data-delay="3">
+      <a href="tel:+18005550100" class="btn-gold">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Call for Free Estimate
+      </a>
+      <a href="#services" class="btn-ghost">Explore Services →</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat reveal" data-delay="1">
+      <div class="hstat-num">15<span>+</span></div>
+      <div class="hstat-label">Years of Mastery</div>
+    </div>
+    <div class="hstat reveal" data-delay="2">
+      <div class="hstat-num">4,800<span>+</span></div>
+      <div class="hstat-label">Homes Transformed</div>
+    </div>
+    <div class="hstat reveal" data-delay="3">
+      <div class="hstat-num">4.9<span>★</span></div>
+      <div class="hstat-label">Average Rating</div>
+    </div>
+    <div class="hstat reveal" data-delay="4">
+      <div class="hstat-num">&lt;90<span>min</span></div>
+      <div class="hstat-label">Emergency Response</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>HVAC Installation</span>
+    <span>Emergency Repair</span>
+    <span>Furnace Service</span>
+    <span>Boiler Repair</span>
+    <span>System Design</span>
+    <span>Maintenance Plans</span>
+    <span>Certification</span>
+    <span>Air Conditioning</span>
+    <span>Heating Solutions</span>
+    <span>HVAC Installation</span>
+    <span>Emergency Repair</span>
+    <span>Furnace Service</span>
+    <span>Boiler Repair</span>
+    <span>System Design</span>
+    <span>Maintenance Plans</span>
+    <span>Certification</span>
+    <span>Air Conditioning</span>
+    <span>Heating Solutions</span>
+  </div>
+</div>
+
+<!-- ═══ INTRO ═══ -->
+<section class="intro">
+  <div class="intro-visual reveal-left">
+    <img src="https://images.unsplash.com/photo-1604754742629-3e5728249d73?w=1200&q=85&auto=format&fit=crop" alt="HVAC professional working on system" loading="lazy">
+    <div class="intro-visual-overlay"></div>
+  </div>
+  <div class="intro-text reveal-right">
+    <div class="section-label">Our Standard</div>
+    <h2 class="display-title">Where <em>Precision</em><br>Meets Comfort</h2>
+    <div class="gold-rule"></div>
+    <p class="body-text">Most HVAC companies send a technician with a toolkit. We send a certified climate engineer with a commitment to perfection. Every system we touch is designed, installed, or serviced to perform at its absolute peak — for decades.</p>
+    <ul class="check-list">
+      <li>Every technician is NATE-certified and background-checked</li>
+      <li>Same-day service available — 24 hours, 365 days a year</li>
+      <li>100% transparent pricing — you approve everything, always</li>
+      <li>Written warranties on all labor and equipment</li>
+      <li>Energy Star certified installations only</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ SERVICES ═══ -->
+<section class="services" id="services">
+  <div class="services-header">
+    <div class="reveal">
+      <div class="section-label">What We Do</div>
+      <h2 class="display-title">Complete Climate<br><em>Solutions</em></h2>
+    </div>
+    <p class="body-text reveal" data-delay="2">From single-room mini-splits to full commercial HVAC architecture — we have the expertise to engineer the perfect solution for any space.</p>
+  </div>
+  <div class="services-grid">
+    <div class="svc-card reveal" data-delay="1">
+      <span class="svc-num">01</span>
+      <span class="svc-icon">🏗️</span>
+      <div class="svc-title">HVAC Design &amp; Installation</div>
+      <p class="svc-desc">Custom-engineered systems designed for your exact space, load requirements, and efficiency goals. Energy Star certified. Built to last 25+ years.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-card reveal" data-delay="2">
+      <span class="svc-num">02</span>
+      <span class="svc-icon">❄️</span>
+      <div class="svc-title">Air Conditioning Services</div>
+      <p class="svc-desc">Central AC, ductless mini-splits, and heat pumps — installation, repair, tune-ups, and seasonal maintenance for any residential system.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-card reveal" data-delay="3">
+      <span class="svc-num">03</span>
+      <span class="svc-icon">🔥</span>
+      <div class="svc-title">Gas Furnace Repair &amp; Install</div>
+      <p class="svc-desc">Expert furnace diagnostics, same-day emergency repairs, and new high-efficiency installations with up to 10-year parts and labor warranty.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-card reveal" data-delay="1">
+      <span class="svc-num">04</span>
+      <span class="svc-icon">♨️</span>
+      <div class="svc-title">Central Heating &amp; Boiler Services</div>
+      <p class="svc-desc">Hydronic heating, boiler repair, replacement, and full system installation. Certified for all major brands and all fuel types including gas and oil.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-card reveal" data-delay="2">
+      <span class="svc-num">05</span>
+      <span class="svc-icon">📋</span>
+      <div class="svc-title">Inspection &amp; Certification</div>
+      <p class="svc-desc">Comprehensive HVAC inspections for home buyers, sellers, and landlords. Certified documentation delivered digitally for real estate transactions.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+    <div class="svc-card reveal" data-delay="3">
+      <span class="svc-num">06</span>
+      <span class="svc-icon">🛡️</span>
+      <div class="svc-title">Maintenance &amp; Care Plans</div>
+      <p class="svc-desc">Annual or bi-annual plans that extend system lifespan, preserve efficiency, and catch failures before they become disasters. Plans from $149/yr.</p>
+      <div class="svc-arrow">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PAIN ═══ -->
+<section class="pain">
+  <div class="pain-inner">
+    <div class="pain-sticky reveal-left">
+      <div class="section-label">Sound Familiar?</div>
+      <h2 class="display-title">Problems<br>We <em>Solve</em><br>Every Day</h2>
+      <div class="gold-rule"></div>
+      <p class="body-text" style="max-width:340px">Before clients call PrimeAir, they've often dealt with these frustrations. We've built our entire company around eliminating them.</p>
+      <a href="tel:+18005550100" class="btn-gold" style="margin-top:1rem">Call Us Now →</a>
+    </div>
+    <div class="pain-cards reveal-right">
+      <div class="pain-card">
+        <div class="pain-q">"My AC died in a heatwave and nobody could come out for 3 days."</div>
+        <div class="pain-a">We provide genuine 24/7/365 emergency response. Most emergency calls are answered with a technician on-site within 90 minutes — including weekends and all major holidays.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-q">"They fixed it, charged me $800, and the same problem came back a week later."</div>
+        <div class="pain-a">Every repair we perform is backed by a written warranty. If the same issue recurs within our guarantee period, we return and fix it at zero additional cost — no questions asked.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-q">"The quote was one number. The invoice was something completely different."</div>
+        <div class="pain-a">We operate on 100% transparent flat-rate pricing. You receive a written estimate before any work begins. The price you approve is the price you pay — period.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-q">"My energy bills keep climbing and I don't know why."</div>
+        <div class="pain-a">An aging or improperly sized HVAC system can inflate energy costs by 30–45%. Our system optimization and efficiency upgrades typically save clients $50–$120 per month in utility costs.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-q">"I couldn't verify if the technician was actually qualified or just learning on my system."</div>
+        <div class="pain-a">Every PrimeAir technician is NATE-certified, EPA 608 licensed, individually background-checked, and continuously factory-trained. We carry $2M in liability coverage for your peace of mind.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-q">"They couldn't explain what was wrong in plain English."</div>
+        <div class="pain-a">Our technicians walk you through every diagnosis and every option in plain language — not jargon. You make informed decisions. We simply make them happen.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CREDENTIALS ═══ -->
+<section class="credentials" id="why">
+  <div class="cred-visual reveal-left">
+    <img src="https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=1200&q=85&auto=format&fit=crop" alt="Modern home at sunset golden hour" loading="lazy">
+    <div class="cred-visual-overlay"></div>
+    <div class="cred-float reveal">
+      <div class="cred-float-title">The PrimeAir Standard</div>
+      <div class="cred-float-sub">What every customer receives — without exception</div>
+      <div class="cred-badges">
+        <span class="badge">NATE Certified</span>
+        <span class="badge">EPA 608</span>
+        <span class="badge">State Licensed</span>
+        <span class="badge">Fully Insured</span>
+        <span class="badge">Energy Star</span>
+      </div>
+    </div>
+  </div>
+  <div class="cred-text reveal-right">
+    <div class="section-label">Why PrimeAir</div>
+    <h2 class="display-title">The Standard<br><em>Others</em> Chase</h2>
+    <div class="gold-rule"></div>
+    <p class="body-text">We've built a reputation as the most trusted HVAC company in the region by refusing to cut corners — ever. Here's what makes us fundamentally different.</p>
+    <div class="cred-grid">
+      <div class="cred-item">
+        <span class="cred-item-icon">⚡</span>
+        <h4>24/7 Emergency Service</h4>
+        <p>We answer every call, every hour — including all holidays. Most emergency jobs begin within 90 minutes.</p>
+      </div>
+      <div class="cred-item">
+        <span class="cred-item-icon">💰</span>
+        <h4>Transparent Pricing</h4>
+        <p>Flat-rate written estimates before any work begins. No hidden fees, no bait-and-switch. Ever.</p>
+      </div>
+      <div class="cred-item">
+        <span class="cred-item-icon">🏅</span>
+        <h4>Industry Warranties</h4>
+        <p>Up to 10 years on new equipment. 2 years on all labor. We stand behind everything we do.</p>
+      </div>
+      <div class="cred-item">
+        <span class="cred-item-icon">🌿</span>
+        <h4>Energy Efficiency Focus</h4>
+        <p>Our clients save an average of 25% on energy costs after a PrimeAir system upgrade.</p>
+      </div>
+      <div class="cred-item">
+        <span class="cred-item-icon">🤝</span>
+        <h4>Financing Available</h4>
+        <p>0% interest plans for qualified buyers. Payments from $79/month on new system installations.</p>
+      </div>
+      <div class="cred-item">
+        <span class="cred-item-icon">🔒</span>
+        <h4>Background Checked</h4>
+        <p>Every technician is individually vetted, drug screened, and identity verified. Always.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROCESS ═══ -->
+<section class="process" id="process">
+  <div class="process-bg"></div>
+  <div class="reveal centered" style="text-align:center">
+    <div class="section-label" style="justify-content:center">How It Works</div>
+    <h2 class="display-title" style="text-align:center">From First Call<br>to <em>Perfect Comfort</em></h2>
+  </div>
+  <div class="process-steps">
+    <div class="proc-step reveal" data-delay="1">
+      <div class="proc-num">1</div>
+      <h3>Free Consultation</h3>
+      <p>Call or text us anytime. We listen carefully, ask the right questions, and schedule your visit at a time that suits you — including evenings.</p>
+    </div>
+    <div class="proc-step reveal" data-delay="2">
+      <div class="proc-num">2</div>
+      <h3>On-Site Diagnosis</h3>
+      <p>A certified technician arrives on time, performs a thorough assessment, and provides a clear written estimate covering every option available to you.</p>
+    </div>
+    <div class="proc-step reveal" data-delay="3">
+      <div class="proc-num">3</div>
+      <h3>Approved Work Begins</h3>
+      <p>You approve the scope and price. Our team arrives with all necessary parts, works cleanly, and treats every corner of your home with respect.</p>
+    </div>
+    <div class="proc-step reveal" data-delay="4">
+      <div class="proc-num">4</div>
+      <h3>Guaranteed Comfort</h3>
+      <p>We test and certify the completed work, walk you through everything, and leave only when you're 100% satisfied — backed by our written guarantee.</p>
+    </div>
+  </div>
+</section>
+
+<!-- EMERGENCY STRIP -->
+<section class="emergency">
+  <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=80&auto=format&fit=crop" alt="Dramatic sunset sky" loading="lazy">
+  <div class="emergency-overlay"></div>
+  <div class="emergency-content reveal">
+    <div class="emergency-eyebrow">24 / 7 / 365 — We Never Close</div>
+    <h2 class="emergency-title">System Down?<br><em>We're Already On The Way.</em></h2>
+    <p class="emergency-sub">HVAC emergencies don't wait for business hours. Neither do we.</p>
+    <a href="tel:+18005550100" class="emergency-phone">(800) 555-0100</a>
+    <div class="emergency-note">Free consultation · Same-day service · Licensed technicians</div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testimonials" id="reviews">
+  <div style="text-align:center" class="reveal">
+    <div class="section-label" style="justify-content:center">Client Stories</div>
+    <h2 class="display-title" style="text-align:center">4,800 Families.<br><em>One Promise.</em></h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi reveal" data-delay="1">
+      <div class="testi-bg-quote">"</div>
+      <div class="testi-stars"><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div></div>
+      <div class="testi-quote">"Our AC failed during a 98-degree week. PrimeAir had a technician at our door in under 2 hours. Fixed same day. I've never experienced service like this from any contractor — in any trade."</div>
+      <div class="testi-author"><div class="testi-avatar">MR</div><div><div class="testi-name">Michael R.</div><div class="testi-loc">Homeowner · Atlanta, GA</div></div></div>
+    </div>
+    <div class="testi reveal" data-delay="2">
+      <div class="testi-bg-quote">"</div>
+      <div class="testi-stars"><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div></div>
+      <div class="testi-quote">"Three quotes. PrimeAir wasn't the cheapest — but the depth of their explanation, the quality of their assessment, and the clarity of their pricing made the decision effortless. Worth every penny."</div>
+      <div class="testi-author"><div class="testi-avatar">ST</div><div><div class="testi-name">Sandra T.</div><div class="testi-loc">Property Owner · Houston, TX</div></div></div>
+    </div>
+    <div class="testi reveal" data-delay="3">
+      <div class="testi-bg-quote">"</div>
+      <div class="testi-stars"><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div></div>
+      <div class="testi-quote">"Full furnace and AC replacement last winter. The crew was immaculate — finished ahead of schedule, left zero mess. The system is so quiet I sometimes walk over to the vent just to check it's running."</div>
+      <div class="testi-author"><div class="testi-avatar">JK</div><div><div class="testi-name">James K.</div><div class="testi-loc">Homeowner · Phoenix, AZ</div></div></div>
+    </div>
+    <div class="testi reveal" data-delay="1">
+      <div class="testi-bg-quote">"</div>
+      <div class="testi-stars"><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div></div>
+      <div class="testi-quote">"I've used three HVAC companies over the years. PrimeAir is in a completely different league. They diagnosed an issue in 20 minutes that two other companies missed entirely over the span of a year."</div>
+      <div class="testi-author"><div class="testi-avatar">AL</div><div><div class="testi-name">Amanda L.</div><div class="testi-loc">Homeowner · Denver, CO</div></div></div>
+    </div>
+    <div class="testi reveal" data-delay="2">
+      <div class="testi-bg-quote">"</div>
+      <div class="testi-stars"><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div></div>
+      <div class="testi-quote">"The maintenance plan genuinely pays for itself. They found a cracked heat exchanger that would have been a $3,200 emergency replacement. Caught it early, fixed it for $380. Incredible peace of mind."</div>
+      <div class="testi-author"><div class="testi-avatar">DC</div><div><div class="testi-name">David C.</div><div class="testi-loc">Homeowner · Charlotte, NC</div></div></div>
+    </div>
+    <div class="testi reveal" data-delay="3">
+      <div class="testi-bg-quote">"</div>
+      <div class="testi-stars"><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div><div class="testi-star"></div></div>
+      <div class="testi-quote">"As a real estate agent, I send every client to PrimeAir for inspections. Their reports are thorough, professional, and always on time. They've saved multiple deals from falling apart. Irreplaceable partners."</div>
+      <div class="testi-author"><div class="testi-avatar">PW</div><div><div class="testi-name">Patricia W.</div><div class="testi-loc">Real Estate Agent · Dallas, TX</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="faq" id="faq">
+  <div class="faq-inner">
+    <div class="faq-sticky reveal-left">
+      <div class="section-label">FAQ</div>
+      <h2 class="display-title">Every<br>Question.<br><em>Answered.</em></h2>
+      <div class="gold-rule"></div>
+      <p class="body-text">If something below doesn't cover your concern, call us directly. A real person answers — not a machine.</p>
+      <a href="tel:+18005550100" class="btn-ghost" style="display:inline-flex;margin-top:.5rem">☎ Speak to an Expert →</a>
+    </div>
+    <div class="faq-list reveal-right">
+      <div class="faq-item open">
+        <div class="faq-q"><span class="faq-q-text">How quickly can you respond to an HVAC emergency?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>For emergency calls, we target a certified technician at your door within 60–90 minutes across all service areas. We operate 24 hours a day, 365 days a year — including Thanksgiving, Christmas, and New Year's Day.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-q-text">Do you offer free estimates for new installations?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>Yes — all consultations and written estimates for new system installations are completely free with no obligation. We assess your home, walk through every option, and provide transparent pricing before any commitment is made.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-q-text">What HVAC brands do you work with?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>We are certified to install and service all major brands including Carrier, Trane, Lennox, Rheem, Goodman, Daikin, Mitsubishi, Bosch, and many more. We carry parts for most common residential models in our service vehicles.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-q-text">Are your technicians background-checked and insured?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>Every PrimeAir technician undergoes a comprehensive background check, drug screening, and identity verification before joining our team. We carry $2M in general liability coverage and full workers' compensation insurance.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-q-text">What warranties do you provide on your work?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>All new equipment installations carry the manufacturer's warranty (typically 5–12 years on parts) plus our additional labor warranty. Most repairs include a minimum 1-year warranty on both parts and labor. All warranties are provided in writing.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-q-text">Do you offer financing on new systems?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>Yes. We offer 0% interest financing plans for qualified applicants through our lending partners. New system installations can typically be financed with payments starting under $80/month. Ask your technician for details during your estimate.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-q-text">Repair or replace — how do I know which is right?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>Our technicians provide a completely honest assessment with both paths clearly explained, including long-term cost projections. The industry rule of thumb: if your system is 12+ years old and repair cost exceeds 50% of replacement value, we'll tell you to replace — even if that means less immediate revenue for us.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-q-text">What areas do you serve?</span><span class="faq-toggle">+</span></div>
+        <div class="faq-a"><p>We serve the greater [Your Metro Area] region including all surrounding suburbs and counties. Call us to confirm service availability in your specific zip code — we're expanding our service area regularly.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA ═══ -->
+<section class="final-cta" id="contact">
+  <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=2000&q=80&auto=format&fit=crop" alt="Luxury home at golden hour" loading="lazy">
+  <div class="final-cta-overlay"></div>
+  <div class="final-cta-content reveal">
+    <div class="section-label" style="justify-content:center">One Call Changes Everything</div>
+    <h2 class="display-title" style="text-align:center">Your Home Deserves<br><em>Exceptional</em> Comfort</h2>
+    <p class="final-cta-sub">Join 4,800+ families across America who trust PrimeAir with the climate of their home. The call is free. The estimate is free. The decision is entirely yours.</p>
+    <a href="tel:+18005550100" class="final-phone">(800) 555-0100</a>
+    <div class="final-phone-label">Available 24/7 · Free Consultation · No Obligation</div>
+    <div class="final-features">
+      <div class="final-feat">Licensed &amp; Insured</div>
+      <div class="final-feat">NATE Certified</div>
+      <div class="final-feat">Same-Day Service</div>
+      <div class="final-feat">Transparent Pricing</div>
+      <div class="final-feat">Written Warranty</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="f-logo"><span class="f-logo-dot"></span>PrimeAir HVAC</div>
+      <p class="f-desc">Delivering elite climate engineering to American homes since 2009. Licensed, insured, and committed to a standard of excellence that transforms how you experience comfort.</p>
+      <div class="f-badges">
+        <span class="f-badge">NATE Certified</span>
+        <span class="f-badge">EPA 608</span>
+        <span class="f-badge">State Licensed</span>
+        <span class="f-badge">Energy Star</span>
+      </div>
+    </div>
+    <div>
+      <div class="f-head">Services</div>
+      <ul class="f-links">
+        <li><a href="#">AC Installation</a></li>
+        <li><a href="#">AC Repair</a></li>
+        <li><a href="#">Furnace Services</a></li>
+        <li><a href="#">Boiler Repair</a></li>
+        <li><a href="#">HVAC Design</a></li>
+        <li><a href="#">Maintenance Plans</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-head">Company</div>
+      <ul class="f-links">
+        <li><a href="#">About PrimeAir</a></li>
+        <li><a href="#">Our Team</a></li>
+        <li><a href="#">Certifications</a></li>
+        <li><a href="#">Service Areas</a></li>
+        <li><a href="#">Financing</a></li>
+        <li><a href="#">Careers</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-head">Contact</div>
+      <ul class="f-links">
+        <li><a href="tel:+18005550100">(800) 555-0100</a></li>
+        <li><a href="mailto:hello@primeairhvac.com">hello@primeairhvac.com</a></li>
+        <li><a href="#">123 Climate Blvd, Suite 400</a></li>
+        <li><a href="#">Atlanta, GA 30305</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="f-copy">© 2024 PrimeAir HVAC Services LLC. All rights reserved.</div>
+    <div class="f-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Sitemap</a>
+    </div>
+  </div>
+</footer>
+
+<!-- PHONE FLOAT -->
+<a href="tel:+18005550100" class="phone-float" title="Call Us Now">☎</a>
+
+<script>
+// Custom cursor
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+if(cur && ring){
+  let rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{
+    cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px';
+    rx+=(e.clientX-rx)*.12; ry+=(e.clientY-ry)*.12;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  });
+  document.querySelectorAll('a,button,.svc-card,.pain-card,.testi,.faq-q').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='14px';cur.style.height='14px';ring.style.width='52px';ring.style.height='52px'});
+    el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';ring.style.width='36px';ring.style.height='36px'});
+  });
+}
+// RAF ring
+function animRing(){requestAnimationFrame(animRing)}animRing();
+
+// Nav scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>60)},{passive:true});
+
+// Burger
+const burger=document.getElementById('burger');
+burger.addEventListener('click',()=>nav.classList.toggle('mobile-open'));
+document.querySelectorAll('.nav-center a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('mobile-open')));
+
+// Reveal on scroll
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('up');io.unobserve(e.target)}});
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>io.observe(el));
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q=>{
+  q.addEventListener('click',()=>{
+    const item=q.parentElement;
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+// Parallax hero subtle
+window.addEventListener('scroll',()=>{
+  const hero=document.querySelector('.hero-media img');
+  if(hero) hero.style.transform=`translateY(${scrollY*.25}px)`;
+},{passive:true});
+</script>
+</body>
+</html>
